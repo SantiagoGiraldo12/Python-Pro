@@ -1,13 +1,56 @@
-meme_dict = {
-            "CRINGE": "Algo excepcionalmente raro o embarazoso",
-            "LOL": "Una respuesta común a algo gracioso",
-            "ROFL" : "Una respuesta a una broma",
-            "AGGRO" : "Ponerse agresivo/enojado"
-}
+import discord
+from discord.ext import commands
+import random
+import datetime 
 
-word = input("Escribe una palabra que no entiendas (¡con mayúsculas!): ")
+intents = discord.Intents.default() # Asegúrate de habilitar los intents necesarios en el portal de desarrolladores de Discord
+intents.message_content = True
 
-if word in meme_dict.keys():
-    print(meme_dict[word])
-else:
-    print("Esta palabra no fue encontrada")
+bot = commands.Bot(command_prefix='!', intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f'We have logged in as {bot.user}')
+
+@bot.command()
+async def hello(ctx):
+    await ctx.send(f'Hola, soy un bot {bot.user}!')
+
+@bot.command()
+async def heh(ctx, count_heh = 6):
+    await ctx.send("he" * count_heh)
+
+@bot.command()
+async def add(ctx, a: int, b: int):
+    await ctx.send(a + b)
+@bot.command()
+async def multiply(ctx, a: int, b: int):
+    await ctx.send(a * b)
+@bot.command()
+async def divide(ctx, a: int, b: int):
+    if b == 0:
+        await ctx.send("Error: Division by zero is not allowed.")
+    else:
+        await ctx.send(a / b)               
+@bot.command()
+async def subtract(ctx, a: int, b: int):
+    await ctx.send(a - b)                       
+
+@bot.command()
+async def repeat(ctx, times: int, *, content: str):
+    for _ in range(times):
+        await ctx.send(content)     
+
+# Comando de dado 🎲
+@bot.command()
+async def dado(ctx, lados: int = 6):
+    resultado = random.randint(1, lados)
+    await ctx.send(f'🎲 El dado cayó en *{resultado}* de {lados} lados!')
+
+# Comando para mostrar la hora ⏰
+@bot.command()
+async def hora(ctx):
+    ahora = datetime.datetime.now().strftime("%H:%M:%S")
+    await ctx.send(f'⏰ La hora actual es: {ahora}')   
+
+bot.run("")
